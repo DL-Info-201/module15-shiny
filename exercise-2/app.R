@@ -1,52 +1,58 @@
 # Load the shiny, ggplot2, and dplyr libraries
-
+library("shiny")
+library("ggplot2")
+library("dplyr")
 
 # You will once again be working with the `diamonds` data set provided by ggplot2
 # Use dplyr's `sample_n()` function to get a random 3000 rows from the data set
 # Store this sample in a variable `diamonds.sample`
 
+diamonds.sample <- sample(diamonds, 3000)
 
 # For convenience store the `range()` of values for the `price` and `carat` values
 # for the ENTIRE diamonds dataset.
 
-
+price.range <- range(diamonds$price)
+carat.range <- range(diamonds$carat)
 
 # Define a UI using a fluidPage layout
-
-
+ui <- fluidPage(
+  
   # Include a `titlePanel` with the title "Diamond Viewer"
-
-
+  titlePanel("Diamond Viewer"),
+  
   # Include a `sidebarLayout()`
-
-
+  sidebarLayout(
+    
     # The `siderbarPanel()` should have the following control widgets:
-
-
+    sidebarPanel(
+      
       # A sliderInput labeled "Price (in dollars)". This slider should let the user pick a range
       # between the minimum and maximum price of the entire diamond data set
-
-
+      sliderInput('price.choice', label="Price (in dollars)", min=price.range[1], max=price.range[2], value=price.range),
+      
       # A sliderInput labeled "Carats". This slider should let the user pick a range
       # between the minimum and maximum carats of the entire diamond data set
-
-
+      sliderInput('carat.choice', label="Carats", min=carat.range[1], max=carat.range[2], value=carat.range),
+      
       # A checkboxInput labeled "Show Trendline". It's default value should be TRUE
-
-
+      checkboxInput('smooth', label=strong("Show Trendline"), value=TRUE),
+      
       # A slectInput labeled "Facet By", with choices "cut", "clarity" and "color"
-
-
-
+      selectInput('facet.by', label="Facet By", choices=c('cut', 'clarity', 'color'))
+    ),
+    
     # The `mainPanel()` should have the following reactive outputs:
-
-
+    mainPanel(
+      
       # A plotOutput showing a plot based on the user specifications
-
-
+      plotOutput('plot'),
+      
       # Bonus: a dataTableOutput showing a data table of relevant observations
-
-
+      dataTableOutput('table')
+    )
+  )
+)
 
 # Define a Server function for the app
 
